@@ -97,12 +97,12 @@ def scrap_instagram_comments(link, chave_partida, data_partida, numero_rolagens=
             writer = csv.writer(f)
             writer.writerow(['Número', 'Comentário'])  # Cabeçalho
 
-            for i, comment in enumerate(unique_comments, 1):
+            for i, comment in enumerate(filtered_comments, 1):
                 print(f"{i}: {comment}")
                 writer.writerow([i, comment])
 
         print(f"\nSucesso! Os comentários foram salvos no arquivo {nome_arquivo}.")
-        return unique_comments
+        return filtered_comments
 
     except Exception as e:
         print(f"\nERRO: Ocorreu um erro ao extrair os textos dos comentários: {e}")
@@ -158,4 +158,5 @@ def process_json_file(json_path):
 if __name__ == "__main__":
     # Exemplo de uso
     json_file = "../arquivos_scrap/lote_partidas/lote2.json"  # Altere para o caminho do seu arquivo JSON
+
     process_json_file(json_file)
