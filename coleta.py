@@ -11,7 +11,7 @@ import time
 import os
 
 
-def scrap_instagram_comments(link, chave_partida, data_partida, numero_rolagens=30):
+def scrap_instagram_comments(link, chave_partida, data_partida, numero_rolagens=40):
     """
     Faz scraping de comentários de um post do Instagram.
 
@@ -81,14 +81,14 @@ def scrap_instagram_comments(link, chave_partida, data_partida, numero_rolagens=
         comments_list = [span.text for span in comment_spans]
         unique_comments = list(dict.fromkeys(comments_list))
 
-        filtered_comments = [comment for comment in unique_comments if len(comment) <= 160]
+        filtered_comments = [comment for comment in unique_comments if len(comment) <= 111]
 
         print(f"\n--- Total de comentários coletados: {len(unique_comments)} ---")
-        print(f"--- Comentários filtrados (≤160 caracteres): {len(filtered_comments)} ---")
+        print(f"--- Comentários filtrados (≤111 caracteres): {len(filtered_comments)} ---")
         print(f"--- Comentários descartados: {len(unique_comments) - len(filtered_comments)} ---")
 
         # Concatena o nome do arquivo: chave + data
-        nome_arquivo = f"./arquivos_scrap/antigos/comentarios_{chave_partida}_{data_partida}.csv"
+        nome_arquivo = f"./dados/coletados/{chave_partida}_{data_partida}.csv"
 
         # Garante que o diretório existe
         os.makedirs(os.path.dirname(nome_arquivo), exist_ok=True)
@@ -102,7 +102,7 @@ def scrap_instagram_comments(link, chave_partida, data_partida, numero_rolagens=
                 writer.writerow([i, comment])
 
         print(f"\nSucesso! Os comentários foram salvos no arquivo {nome_arquivo}.")
-        return filtered_comments
+        return unique_comments
 
     except Exception as e:
         print(f"\nERRO: Ocorreu um erro ao extrair os textos dos comentários: {e}")
@@ -131,7 +131,6 @@ def process_json_file(json_path):
             link = match_data[0]
             data_partida = match_data[1]
 
-
             comments = scrap_instagram_comments(link, chave_partida, data_partida)
             results[chave_partida] = {
                 'data': data_partida,
@@ -158,5 +157,4 @@ def process_json_file(json_path):
 if __name__ == "__main__":
     # Exemplo de uso
     json_file = "../arquivos_scrap/lote_partidas/lote2.json"  # Altere para o caminho do seu arquivo JSON
-
     process_json_file(json_file)
